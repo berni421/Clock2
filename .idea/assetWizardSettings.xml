@@ -102,6 +102,7 @@
                                               <map>
                                                 <entry key="color" value="0000ff" />
                                                 <entry key="text" value="Clock2" />
+                                                <entry key="trimmed" value="true" />
                                               </map>
                                             </option>
                                           </PersistentState>
@@ -114,6 +115,7 @@
                                               <map>
                                                 <entry key="color" value="0000ff" />
                                                 <entry key="text" value="Clock2" />
+                                                <entry key="trimmed" value="true" />
                                               </map>
                                             </option>
                                           </PersistentState>

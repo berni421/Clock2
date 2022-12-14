@@ -9,6 +9,8 @@ class Sketch extends PApplet {
 
     String TAG = getClass().getSimpleName();
     PFont font = createFont("SansSerif", 1);
+    float largeFont = 40;
+    float smallFont = 20;
 
     public void settings() {
         fullScreen();
@@ -20,6 +22,7 @@ class Sketch extends PApplet {
     }
 
     public void draw() {
+        // Black background: OLED friendly
         background(0);
 
         // time
@@ -28,38 +31,48 @@ class Sketch extends PApplet {
         String ss = addPadding(second(), "0", 2);
         String time = hh + ":" + mm + ":" + ss;
         textFont(font,40 * displayDensity);
-        text(time, (width - textWidth(time)) / 2, height / 2f + 0.5f * 40 * displayDensity);
+        text(time, (width - textWidth(time)) / 2, height / 2f + 0.5f * largeFont * displayDensity);
 
         // Day of Week
         int dayOfWeek = Calendar.getInstance().get(Calendar.DAY_OF_WEEK);
         String td = textDay(dayOfWeek);
         textFont(font,20 * displayDensity);
-        text(td, (width - textWidth(td)) / 2, height / 2f - 3 * 20 * displayDensity);
+        text(td, (width - textWidth(td)) / 2, height / 2f - 3 * smallFont * displayDensity);
 
         // timename
         String tn = textTimeName(hour());
         textFont(font,20 * displayDensity);
-        text(tn, (width - textWidth(tn)) / 2, height / 2f - 2 * 20 * displayDensity);
+        text(tn, (width - textWidth(tn)) / 2, height / 2f - 2 * smallFont * displayDensity);
 
         // day Month
         String dd_mo = addPadding(day(), " ", 2) + " " + textMonth(month());
         textFont(font,20 * displayDensity);
-        text(dd_mo, (width - textWidth(dd_mo)) / 2, height / 2f + 3 * 20 * displayDensity);
+        text(dd_mo, (width - textWidth(dd_mo)) / 2, height / 2f + 3 * smallFont * displayDensity);
 
         // Year
         String yyyy = addPadding(year(), " ", 4);
         textFont(font,20 * displayDensity);
-        text(yyyy, (width - textWidth(yyyy)) / 2, height / 2f + 4 * 20 * displayDensity);
+        text(yyyy, (width - textWidth(yyyy)) / 2, height / 2f + 4 * smallFont * displayDensity);
 
+//        try {
+//            if (wearInteractive()) {
+//                frameRate(1);
+//            } else {
+//                frameRate(0.1f);
+//            }
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
 
     }
 
     String textTimeName(int hour){
         String t = "error";
         if (hour <= 4) t = "early";
-        if (hour > 4 && hour < 12) t = "morning";
-        if (hour > 12 && hour < 18) t = "afternoon";
-        if (hour > 18) t = "evening";
+        if (hour > 4 && hour <= 11) t = "morning";
+        if (hour > 11 && hour <= 18) t = "afternoon";
+        if (hour > 18 && hour <= 21) t = "evening";
+        if (hour > 21) t = "late";
         return t;
     }
 
@@ -73,7 +86,7 @@ class Sketch extends PApplet {
     }
 
     String textDay(int dayofweek) {
-        String t = "";
+        String t = "error";
         switch (dayofweek) {
             case 1:
                 t = "Monday";
@@ -97,7 +110,6 @@ class Sketch extends PApplet {
                 t = "Sunday";
                 break;
             default:
-                t = "error";
         }
         return t;
     }
