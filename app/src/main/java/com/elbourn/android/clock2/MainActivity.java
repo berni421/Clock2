@@ -6,42 +6,39 @@ import android.view.ViewGroup;
 import android.widget.FrameLayout;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.wear.ambient.AmbientModeSupport;
 import processing.android.CompatUtils;
 import processing.android.PFragment;
 import processing.core.PApplet;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements AmbientModeSupport.AmbientCallbackProvider {
 
     String TAG = getClass().getSimpleName();
 
-    PApplet sketch;
+    PApplet sketch = null;
+    FrameLayout frameLayout = null;
+    PFragment pFragment = null;
     int width = ViewGroup.LayoutParams.MATCH_PARENT;
     int height = ViewGroup.LayoutParams.MATCH_PARENT;
+    AmbientModeSupport.AmbientController ambientController = null;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setup();
-    }
-
-    void setup() {
-        try {
-            FrameLayout frameLayout = new FrameLayout(this);
-            frameLayout.setId(CompatUtils.getUniqueViewId());
-            ViewGroup.LayoutParams layoutParams = new ViewGroup.LayoutParams(width, height);
-            setContentView(frameLayout, layoutParams);
-            sketch = new Sketch();
-            PFragment pFragment = new PFragment(sketch);
-            pFragment.setView(frameLayout, this);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        ambientController = AmbientModeSupport.attach(this);
+        frameLayout = new FrameLayout(this);
+        frameLayout.setId(CompatUtils.getUniqueViewId());
+        ViewGroup.LayoutParams layoutParams = new ViewGroup.LayoutParams(width, height);
+        setContentView(frameLayout, layoutParams);
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        setup();
+        sketch = new Sketch();
+        pFragment = new PFragment(sketch);
+        pFragment.setView(frameLayout, this);
     }
 
     @Override
@@ -60,4 +57,29 @@ public class MainActivity extends AppCompatActivity {
             sketch.onNewIntent(intent);
         }
     }
+
+    @Override
+    public AmbientModeSupport.AmbientCallback getAmbientCallback() {
+        return new MyAmbientCallback();
+    }
+
+    class MyAmbientCallback extends AmbientModeSupport.AmbientCallback {
+        @Override
+        public void onEnterAmbient(Bundle ambientDetails) {
+            // Handle entering ambient mode
+            sketch.frameRate(1);
+        }
+
+        @Override
+        public void onExitAmbient() {
+            // Handle exiting ambient mode
+            sketch.frameRate(1f/60f);
+        }
+
+        @Override
+        public void onUpdateAmbient() {
+            // Update the content
+        }
+    }
+
 }
