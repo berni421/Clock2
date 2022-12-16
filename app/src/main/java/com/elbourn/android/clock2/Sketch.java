@@ -1,16 +1,19 @@
 package com.elbourn.android.clock2;
 
-import java.util.Calendar;
+import android.graphics.Color;
+
+import java.time.LocalDate;
 
 import processing.core.PApplet;
 import processing.core.PFont;
 
-class Sketch extends PApplet {
+public class Sketch extends PApplet {
 
     String TAG = getClass().getSimpleName();
     PFont font = createFont("SansSerif", 1);
     float largeFont = 40;
     float smallFont = 20;
+    private boolean showSeconds = true;
 
     public void settings() {
         fullScreen();
@@ -29,13 +32,20 @@ class Sketch extends PApplet {
         String hh = addPadding(hour(), " ", 2);
         String mm = addPadding(minute(), "0", 2);
         String ss = addPadding(second(), "0", 2);
-        String time = hh + ":" + mm + ":" + ss;
+        String time = "error";
+        if (showSeconds) {
+            time = hh + ":" + mm + ":" + ss;
+        } else {
+            time = hh + ":" + mm;
+        }
         textFont(font,40 * displayDensity);
         text(time, (width - textWidth(time)) / 2, height / 2f + 0.5f * largeFont * displayDensity);
 
         // Day of Week
-        int dayOfWeek = Calendar.getInstance().get(Calendar.DAY_OF_WEEK);
+//        int dayOfWeek = Calendar.getInstance().get(Calendar.DAY_OF_WEEK);
+        int dayOfWeek = LocalDate.now().getDayOfWeek().getValue();
         String td = textDay(dayOfWeek);
+//        String td = LocalDate.now().getDayOfWeek().name(); UPPER CASE
         textFont(font,20 * displayDensity);
         text(td, (width - textWidth(td)) / 2, height / 2f - 3 * smallFont * displayDensity);
 
@@ -53,18 +63,16 @@ class Sketch extends PApplet {
         String yyyy = addPadding(year(), " ", 4);
         textFont(font,20 * displayDensity);
         text(yyyy, (width - textWidth(yyyy)) / 2, height / 2f + 4 * smallFont * displayDensity);
-
-//        try {
-//            if (wearInteractive()) {
-//                frameRate(1);
-//            } else {
-//                frameRate(0.1f);
-//            }
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
-
     }
+
+    public void setShowSeconds(boolean showSeconds) {
+        this.showSeconds = showSeconds;
+    }
+
+    public void setFontColour(int colour) {
+        fill(colour);
+    }
+
 
     String textTimeName(int hour){
         String t = "error";
