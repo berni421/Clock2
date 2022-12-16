@@ -10,8 +10,8 @@ android {
         applicationId "com.elbourn.android.clock2"
         minSdk 26
         targetSdk 31
-        versionCode 5
-        versionName "1.0.4"
+        versionCode 6
+        versionName "1.0.5"
 
     }
 
@@ -30,4 +30,6 @@ dependencies {
     implementation files('libs/processing-core.jar')
     implementation 'androidx.appcompat:appcompat:1.5.1'
     implementation "androidx.wear:wear:1.2.0"
+    implementation 'androidx.coordinatorlayout:coordinatorlayout:1.2.0'
+    implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
 }
